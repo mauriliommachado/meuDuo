@@ -1,14 +1,13 @@
 <ion-header>
   <ion-navbar>
     <ion-title>
-      Meu Duo
-      <3 </ion-title>
+      {{user.name}} </ion-title>
   </ion-navbar>
 </ion-header>
 
 <ion-content class="card-background-page" padding>
 
-  <ion-card>
+  <ion-card [hidden]="checkStatus">
     <ion-item>
       <ion-avatar item-start>
         <img src="assets/tier-icons/base-icons/gold.png">
@@ -34,5 +33,10 @@
         </button>
       </ion-col>
     </ion-row>
+  </ion-card>
+  <ion-card [hidden]="!checkStatus">
+    <img src="https://art-of-lol.com/wp-content/uploads/2015/02/amumu_by_bigfol1702-d5w1m8q.jpg"/>
+    <div class="card-title"></div>
+    <div class="card-subtitle">Não encontramos ninguém. Tente novamente mais tarde</div>
   </ion-card>
 </ion-content>
