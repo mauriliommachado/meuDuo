@@ -1,33 +1,34 @@
 <ion-header>
   <ion-navbar>
-    <ion-title>
-      {{user.name}} </ion-title>
+    <ion-title>{{user.name}}</ion-title>
   </ion-navbar>
 </ion-header>
 
 <ion-content class="card-background-page" padding>
 
   <ion-card [hidden]="checkStatus">
+
     <ion-item>
       <ion-avatar item-start>
-        <img src="assets/tier-icons/base-icons/gold.png">
+        <img [src]="'assets/tier-icons/base-icons/' + elo + '.png'">
       </ion-avatar>
-      <h2>{{elo}}</h2>
+      <h2>{{rankTier}}</h2>
       <p>{{wr}}% de Taxa de Vitória</p>
     </ion-item>
-    <img src="assets/tier-icons/base-icons/gold.png">
+    <img [src]="'assets/tier-icons/base-icons/' + elo + '.png'">
     <ion-card-content>
-      <p></p>
+      <p>League Points : {{lp}}</p>
+      <p>Ranked Flex : {{flexRankTier}}</p>
     </ion-card-content>
     <ion-row>
       <ion-col>
-        <button ion-button icon-left clear large (click)='match()'>
+        <button ion-button icon-left clear (click)='match()'>
           <ion-icon name="thumbs-up"></ion-icon>
           <div>God</div>
         </button>
       </ion-col>
       <ion-col>
-        <button ion-button icon-left clear large (click)='notMatch()'>
+        <button ion-button icon-left clear (click)='notMatch()'>
           <ion-icon name="thumbs-down"></ion-icon>
           <div>Lixo</div>
         </button>
@@ -35,8 +36,14 @@
     </ion-row>
   </ion-card>
   <ion-card [hidden]="!checkStatus">
-    <img src="https://art-of-lol.com/wp-content/uploads/2015/02/amumu_by_bigfol1702-d5w1m8q.jpg"/>
+    <img src="assets/amumu.jpg" />
     <div class="card-title"></div>
     <div class="card-subtitle">Não encontramos ninguém. Tente novamente mais tarde</div>
   </ion-card>
+
+  <ion-tabs>
+      <ion-tab [root]="tab1Root"></ion-tab>
+      <ion-tab [root]="tab2Root"></ion-tab>
+      <ion-tab [root]="tab3Root"></ion-tab>
+    </ion-tabs>
 </ion-content>

@@ -17,6 +17,7 @@ export class RegisterPage {
     public name: string;
     public email: string;
     public password: string;
+    public URL: string = 'https://meu-duo.herokuapp.com';
 
     constructor(public navCtrl: NavController,
         public http: Http,
@@ -32,14 +33,14 @@ export class RegisterPage {
         loader.present();
         let header: Headers = new Headers();
         header.append('Content-Type', 'application/json');
-        header.append('Authorization', 'Basic ZGlpYW5rOmFkbWlu');
+        header.append('Authorization', 'Basic ZGlpYW5rOjEyMzQ1');
         let options = new RequestOptions({ headers: header });
         this.user = { name: this.name, email: this.email, pwd: this.password };
-        this.http.post('http://localhost:8080/api/users', this.user, options)
+        this.http.post(this.URL + '/api/users', this.user, options)
             .map(res => res.text())
             .toPromise().then(data => {
                 loader.dismiss();
-                this.navCtrl.push(LoginPage);
+                this.navCtrl.setRoot(LoginPage);
             }, err => {
                 console.log(err);
 
