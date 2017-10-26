@@ -33,7 +33,7 @@ export class RegisterPage {
         loader.present();
         let header: Headers = new Headers();
         header.append('Content-Type', 'application/json');
-        header.append('Authorization', 'Basic ZGlpYW5rOjEyMzQ1');
+        header.append('Authorization', 'Basic ZGlpYW5rOmFkbWlu');
         let options = new RequestOptions({ headers: header });
         this.user = { name: this.name, email: this.email, pwd: this.password };
         this.http.post(this.URL + '/api/users', this.user, options)

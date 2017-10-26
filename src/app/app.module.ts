@@ -12,6 +12,8 @@ import { HomePage } from '../pages/home/home';
 import { RegisterPage } from '../pages/register/register';
 import { TabsPage } from '../pages/tabs/tabs';
 import { PerfilPage } from '../pages/perfil/perfil';
+import { DuoPage } from '../pages/duo/duo';
+import { PerfilDuoPage } from '../pages/perfilDuo/perfilDuo';
 
 @NgModule({
   declarations: [
@@ -20,7 +22,9 @@ import { PerfilPage } from '../pages/perfil/perfil';
     HomePage,
     RegisterPage,
     TabsPage,
-    PerfilPage
+    PerfilPage,
+    DuoPage,
+    PerfilDuoPage
   ],
   imports: [
     BrowserModule,
@@ -34,7 +38,9 @@ import { PerfilPage } from '../pages/perfil/perfil';
     HomePage,
     RegisterPage,
     TabsPage,
-    PerfilPage
+    PerfilPage,
+    DuoPage,
+    PerfilDuoPage
   ],
   providers: [
     StatusBar,

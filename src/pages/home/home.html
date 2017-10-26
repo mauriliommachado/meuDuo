@@ -4,7 +4,7 @@
   </ion-navbar>
 </ion-header>
 
-<ion-content class="card-background-page" padding>
+<ion-content class="card-background-page" padding no-bounce >
 
   <ion-card [hidden]="checkStatus">
 
@@ -35,15 +35,10 @@
       </ion-col>
     </ion-row>
   </ion-card>
+
   <ion-card [hidden]="!checkStatus">
     <img src="assets/amumu.jpg" />
     <div class="card-title"></div>
     <div class="card-subtitle">Não encontramos ninguém. Tente novamente mais tarde</div>
   </ion-card>
-
-  <ion-tabs>
-      <ion-tab [root]="tab1Root"></ion-tab>
-      <ion-tab [root]="tab2Root"></ion-tab>
-      <ion-tab [root]="tab3Root"></ion-tab>
-    </ion-tabs>
 </ion-content>

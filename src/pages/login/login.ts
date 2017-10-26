@@ -56,7 +56,6 @@ export class LoginPage {
         this.http.get(this.URL + '/api/users/validate/' + hash)
             .map(res => res.text())
             .toPromise().then(user => {
-                this.user = JSON.parse(user);
                 this.navCtrl.setRoot(TabsPage, { 'user': user });
                 loader.dismiss();
             }, err => {

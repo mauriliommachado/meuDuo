@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { HomePage } from '../home/home';
 import { PerfilPage } from '../perfil/perfil';
-import { RegisterPage } from '../register/register';
+import { DuoPage } from '../duo/duo';
 import { NavParams } from 'ionic-angular';
 
 @Component({
@@ -9,7 +9,7 @@ import { NavParams } from 'ionic-angular';
 })
 export class TabsPage {
 
-  tab1Root = PerfilPage;
+  tab1Root = DuoPage;
   tab2Root = HomePage;
   tab3Root = PerfilPage;
 

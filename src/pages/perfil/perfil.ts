@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { Http } from '@angular/http';
 import { NavController, AlertController, LoadingController, NavParams } from 'ionic-angular';
-import { HomePage } from '../home/home';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/toPromise';
 import { Headers, RequestOptions } from '@angular/http';

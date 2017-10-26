@@ -1,0 +1,17 @@
+<ion-header>
+    <ion-navbar>
+        <ion-title>{{user.name}}</ion-title>
+    </ion-navbar>
+</ion-header>
+
+<ion-content no-bounce>
+    <ion-list id="item-list">
+        <button ion-item *ngFor="let duo of duos" (click)="perfil(duo.name)">
+            <ion-avatar item-start>
+                    <img [src]="'assets/tier-icons/base-icons/' + duo.rank + '.png'">
+            </ion-avatar>
+            <h2>{{duo.name}}</h2>
+        </button>
+
+    </ion-list>
+</ion-content>

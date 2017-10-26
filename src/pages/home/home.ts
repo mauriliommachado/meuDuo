@@ -56,7 +56,7 @@ export class HomePage {
     loader.present();
     let header: Headers = new Headers();
     header.append('Content-Type', 'application/json');
-    header.append('Authorization', 'Basic '+this.user.token);
+    header.append('Authorization', 'Basic ' + this.user.token);
     let options = new RequestOptions({ headers: header });
     this.http.get(this.URL + '/api/match/' + this.user.id + '/new', options)
       .map(res => res.text())
@@ -64,8 +64,11 @@ export class HomePage {
         loader.dismiss();
         if (JSON.parse(data) != null) {
           this.elo = JSON.parse(data)[0].elo[1].tier.toLowerCase();
-          this.rankTier = this.titleCase(JSON.parse(data)[0].elo[1].tier) +" "+ JSON.parse(data)[0].elo[1].rank;
-          this.flexRankTier = this.titleCase(JSON.parse(data)[0].elo[0].tier) +" "+ JSON.parse(data)[0].elo[0].rank;
+          this.rankTier = this.titleCase(JSON.parse(data)[0].elo[1].tier) + " " + JSON.parse(data)[0].elo[1].rank;
+          this.flexRankTier = this.titleCase(JSON.parse(data)[0].elo[0].tier) + " " + JSON.parse(data)[0].elo[0].rank;
+          if ((JSON.parse(data)[0].elo[1].wins + JSON.parse(data)[0].elo[1].losses) == 0) {
+            this.wr == 0;
+          }
           this.wr = Math.round((JSON.parse(data)[0].elo[1].wins / (JSON.parse(data)[0].elo[1].wins + JSON.parse(data)[0].elo[1].losses)) * 100);
           this.lp = JSON.parse(data)[0].elo[1].leaguePoints;
           this.id = JSON.parse(data)[0].id;
@@ -95,7 +98,7 @@ export class HomePage {
     loader.present();
     let header: Headers = new Headers();
     header.append('Content-Type', 'application/json');
-    header.append('Authorization', 'Basic '+this.user.token);
+    header.append('Authorization', 'Basic ' + this.user.token);
     let options = new RequestOptions({ headers: header });
     var match = { id: this.user.id, matchId: this.id, status: statusMatch };
     this.http.post(this.URL + '/api/match', match, options)
