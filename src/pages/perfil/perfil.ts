@@ -4,6 +4,7 @@ import { NavController, AlertController, LoadingController, NavParams } from 'io
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/toPromise';
 import { Headers, RequestOptions } from '@angular/http';
+import { AdMobFree, AdMobFreeBannerConfig } from '@ionic-native/admob-free';
 
 @Component({
     selector: 'page-perfil',
@@ -18,8 +19,36 @@ export class PerfilPage {
         public http: Http,
         public alertCtrl: AlertController,
         public loadingCtrl: LoadingController,
-        public paramCtrl: NavParams) {
+        public paramCtrl: NavParams,
+        public adMobFree: AdMobFree) {
         this.user = JSON.parse(paramCtrl.get('user'));
+    }
+
+    showAds() {
+        try {
+            const bannerConfig: AdMobFreeBannerConfig = {
+                id: 'ca-app-pub-9244281701655647/6523547220',
+                //isTesting: true,
+                autoShow: true,bannerAtTop: true
+            }
+
+            this.adMobFree.banner.config(bannerConfig);
+            this.adMobFree.banner.prepare().then(() => {
+                this.adMobFree.banner.show();
+            })
+                .catch(e => console.log(e));
+        }
+        catch (e) {
+            console.error(e);
+        }
+    }
+
+    ionViewWillEnter() {
+        this.showAds();
+    }
+
+    ionViewWillLeave() {
+        this.adMobFree.banner.hide();
     }
 
     doRegister() {

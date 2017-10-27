@@ -5,6 +5,7 @@ import { LoginPage } from '../login/login';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/toPromise';
 import { Headers, RequestOptions } from '@angular/http';
+import { AdMobFree, AdMobFreeBannerConfig } from '@ionic-native/admob-free';
 
 @Component({
     selector: 'page-register',
@@ -22,8 +23,28 @@ export class RegisterPage {
     constructor(public navCtrl: NavController,
         public http: Http,
         public alertCtrl: AlertController,
-        public loadingCtrl: LoadingController) {
+        public loadingCtrl: LoadingController,
+        public adMobFree: AdMobFree) {
+        this.showAds();
+    }
 
+    showAds() {
+        try {
+            const bannerConfig: AdMobFreeBannerConfig = {
+                id: 'ca-app-pub-9244281701655647/6523547220',
+                //isTesting: true,
+                autoShow: true
+            }
+
+            this.adMobFree.banner.config(bannerConfig);
+            this.adMobFree.banner.prepare().then(() => {
+                this.adMobFree.banner.show();
+            })
+                .catch(e => console.log(e));
+        }
+        catch (e) {
+            console.error(e);
+        }
     }
 
     doRegister() {

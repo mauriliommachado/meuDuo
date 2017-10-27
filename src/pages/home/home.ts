@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { Http } from '@angular/http';
 import { NavController, AlertController, LoadingController, NavParams } from 'ionic-angular';
 import { Headers, RequestOptions } from '@angular/http';
-import { AdMobFree, AdMobFreeBannerConfig } from '@ionic-native/admob-free';
+import { AdMobFree, AdMobFreeInterstitialConfig } from '@ionic-native/admob-free';
 
 @Component({
   selector: 'page-home',
@@ -19,37 +19,43 @@ export class HomePage {
   public checkStatus: boolean = true;
   public user;
   public URL: string = 'https://meu-duo.herokuapp.com';
+  public adsCounter: number = 0;
 
   constructor(public navCtrl: NavController,
     public paramCtrl: NavParams,
     public http: Http,
     public alertCtrl: AlertController,
     public loadingCtrl: LoadingController,
-    public admobFree: AdMobFree) {
+    public adMobFree: AdMobFree) {
     this.user = JSON.parse(paramCtrl.get('user'));
-    console.log(this.user.token)
-    this.doGet();
+    this.doGet(false);
     this.showAds();
   }
 
   showAds() {
-    const bannerConfig: AdMobFreeBannerConfig = {
-      // add your config here
-      // for the sake of this example we will just use the test config
-      isTesting: true,
-      autoShow: true,
-      id: "ca-app-pub-9244281701655647~5660702320"
-    };
-    this.admobFree.banner.config(bannerConfig);
-    this.admobFree.banner.prepare()
-      .then(() => {
-        // banner Ad is ready
-        // if we set autoShow to false, then we will need to call the show method here
+    try {
+      const bannerConfig: AdMobFreeInterstitialConfig = {
+        id: 'ca-app-pub-9244281701655647/4663670641',
+        //isTesting: true,
+        autoShow: true
+      }
+
+      this.adMobFree.interstitial.config(bannerConfig);
+      this.adMobFree.interstitial.prepare().then(() => {
+        this.adMobFree.interstitial.show();
+        this.adsCounter = 0;
       })
-      .catch(e => console.log(e));
+        .catch(e => console.log(e));
+    }
+    catch (e) {
+      console.error(e);
+    }
   }
 
-  doGet() {
+  doGet(duo :boolean) {
+    if (duo) {
+      this.showAds();
+    }
     let loader = this.loadingCtrl.create({
       content: "Buscando usuários, aguarde...",
     });
@@ -110,14 +116,14 @@ export class HomePage {
             title: 'Duo!!',
             buttons: [{
               text: 'Ok', role: 'ok', handler: () => {
-                this.doGet();
+                this.doGet(true);
                 return;
               }
             }],
             subTitle: 'Entre em contato com seu novo Duo!'
           }).present();
         } else {
-          this.doGet();
+          this.doGet(false);
         }
       }, err => {
         console.log(err);
@@ -131,12 +137,18 @@ export class HomePage {
               this.elo = null;
               this.wr = null;
               this.id = null;
-              this.doGet();
+              this.doGet(false);
             }
           }],
           subTitle: 'Não foi possível fazer o cadastro com os dados enviados.'
         }).present();
       })
+    if (this.adsCounter == 5){
+      this.adsCounter = 0;
+      this.showAds();
+    }else{
+      this.adsCounter++
+    }
   }
 
   notMatch() {

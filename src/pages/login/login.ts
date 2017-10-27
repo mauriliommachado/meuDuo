@@ -23,26 +23,29 @@ export class LoginPage {
         public http: Http,
         public alertCtrl: AlertController,
         public loadingCtrl: LoadingController,
-        public admobFree: AdMobFree) {
+        public adMobFree: AdMobFree) {
         this.showAds();
     }
 
     showAds() {
-        const bannerConfig: AdMobFreeBannerConfig = {
-            // add your config here
-            // for the sake of this example we will just use the test config
-            isTesting: true,
-            autoShow: true,
-            id: "ca-app-pub-9244281701655647~5660702320"
-        };
-        this.admobFree.banner.config(bannerConfig);
-        this.admobFree.banner.prepare()
-            .then(() => {
-                // banner Ad is ready
-                // if we set autoShow to false, then we will need to call the show method here
+        try {
+            const bannerConfig: AdMobFreeBannerConfig = {
+                id: 'ca-app-pub-9244281701655647/6523547220',
+                //isTesting: true,
+                autoShow: true
+            }
+
+            this.adMobFree.banner.config(bannerConfig);
+            this.adMobFree.banner.prepare().then(() => {
+                this.adMobFree.banner.show();
             })
-            .catch(e => console.log(e));
+                .catch(e => console.log(e));
+        }
+        catch (e) {
+            console.error(e);
+        }
     }
+
     signIn() {
         this.navCtrl.push(RegisterPage);
     }
@@ -56,6 +59,7 @@ export class LoginPage {
         this.http.get(this.URL + '/api/users/validate/' + hash)
             .map(res => res.text())
             .toPromise().then(user => {
+                this.adMobFree.banner.remove();
                 this.navCtrl.setRoot(TabsPage, { 'user': user });
                 loader.dismiss();
             }, err => {
@@ -64,7 +68,7 @@ export class LoginPage {
                 this.alertCtrl.create({
                     title: 'Falha no login',
                     buttons: [{ text: 'Ok' }],
-                    subTitle: err
+                    subTitle: "Credenciais não encontradas"
                 }).present();
             })
     }
