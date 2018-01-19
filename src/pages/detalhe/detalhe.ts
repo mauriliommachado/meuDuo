@@ -3,9 +3,9 @@ import { NavParams } from 'ionic-angular';
 import { AdMobFree, AdMobFreeBannerConfig } from '@ionic-native/admob-free';
 
 @Component({
-    templateUrl: 'perfilDuo.html'
+    templateUrl: 'detalhe.html'
 })
-export class PerfilDuoPage {
+export class DetalhePage {
 
     public user;
     public duo;
@@ -14,10 +14,10 @@ export class PerfilDuoPage {
         public adMobFree: AdMobFree) {
         this.user = paramCtrl.get('user');
         this.duo = paramCtrl.get('duo');
-        this.adMobFree.banner.hide();
+        //this.adMobFree.banner.hide();
     }
 
     ionViewWillEnter() {
-        this.adMobFree.banner.hide();
+        //this.adMobFree.banner.hide();
     }
 }

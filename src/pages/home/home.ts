@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { Http } from '@angular/http';
+import { DetalhePage } from '../detalhe/detalhe';
 import { NavController, AlertController, LoadingController, NavParams } from 'ionic-angular';
 import { Headers, RequestOptions } from '@angular/http';
 import { AdMobFree, AdMobFreeInterstitialConfig } from '@ionic-native/admob-free';
@@ -9,6 +10,8 @@ import { AdMobFree, AdMobFreeInterstitialConfig } from '@ionic-native/admob-free
   templateUrl: 'home.html'
 })
 export class HomePage {
+
+  public summoners;
 
   public elo: string;
   public rankTier: string;
@@ -28,21 +31,21 @@ export class HomePage {
     public loadingCtrl: LoadingController,
     public adMobFree: AdMobFree) {
     this.user = JSON.parse(paramCtrl.get('user'));
-    this.doGet(false);
+    const bannerConfig: AdMobFreeInterstitialConfig = {
+      id: 'ca-app-pub-9244281701655647/4663670641',
+      //isTesting: true,
+      autoShow: true
+    }
+
+    this.adMobFree.interstitial.config(bannerConfig);
     this.showAds();
   }
 
   showAds() {
     try {
-      const bannerConfig: AdMobFreeInterstitialConfig = {
-        id: 'ca-app-pub-9244281701655647/4663670641',
-        //isTesting: true,
-        autoShow: true
-      }
-
-      this.adMobFree.interstitial.config(bannerConfig);
       this.adMobFree.interstitial.prepare().then(() => {
         this.adMobFree.interstitial.show();
+        this.doGet();
         this.adsCounter = 0;
       })
         .catch(e => console.log(e));
@@ -52,10 +55,7 @@ export class HomePage {
     }
   }
 
-  doGet(duo :boolean) {
-    if (duo) {
-      this.showAds();
-    }
+  doGet() {
     let loader = this.loadingCtrl.create({
       content: "Buscando usuários, aguarde...",
     });
@@ -69,16 +69,9 @@ export class HomePage {
       .toPromise().then(data => {
         loader.dismiss();
         if (JSON.parse(data) != null) {
-          this.elo = JSON.parse(data)[0].elo[1].tier.toLowerCase();
-          this.rankTier = this.titleCase(JSON.parse(data)[0].elo[1].tier) + " " + JSON.parse(data)[0].elo[1].rank;
-          this.flexRankTier = this.titleCase(JSON.parse(data)[0].elo[0].tier) + " " + JSON.parse(data)[0].elo[0].rank;
-          if ((JSON.parse(data)[0].elo[1].wins + JSON.parse(data)[0].elo[1].losses) == 0) {
-            this.wr == 0;
-          }
-          this.wr = Math.round((JSON.parse(data)[0].elo[1].wins / (JSON.parse(data)[0].elo[1].wins + JSON.parse(data)[0].elo[1].losses)) * 100);
-          this.lp = JSON.parse(data)[0].elo[1].leaguePoints;
-          this.id = JSON.parse(data)[0].id;
+          this.summoners = JSON.parse(data);
           this.checkStatus = false;
+          this.preencheSummoner();
         } else {
           this.checkStatus = true;
         }
@@ -89,12 +82,30 @@ export class HomePage {
       })
   }
 
+  preencheSummoner() {
+    this.elo = this.summoners[0].elo[0].tier.toLowerCase();
+    this.rankTier = this.titleCase(this.summoners[0].elo[0].tier) + " " + this.summoners[0].elo[0].rank;
+    this.flexRankTier = this.titleCase(this.summoners[0].elo[1].tier) + " " + this.summoners[0].elo[1].rank;
+    if ((this.summoners[0].elo[1].wins + this.summoners[0].elo[0].losses) == 0) {
+      this.wr == 0;
+    }
+    this.wr = Math.round((this.summoners[0].elo[0].wins / (this.summoners[0].elo[0].wins + this.summoners[0].elo[0].losses)) * 100);
+    this.lp = this.summoners[0].elo[0].leaguePoints;
+    this.id = this.summoners[0].id;
+  }
+
   titleCase(str) {
     return str.charAt(0).toUpperCase() + str.substring(1).toLowerCase();
   }
 
   match() {
     this.doCall(true);
+  }
+
+  detalhe() {
+    let summoner = this.summoners[0];
+    summoner.name = this.titleCase(summoner.elo[0].tier);
+    this.navCtrl.push(DetalhePage, { user: this.user, duo: summoner });
   }
 
   doCall(statusMatch: boolean) {
@@ -116,14 +127,14 @@ export class HomePage {
             title: 'Duo!!',
             buttons: [{
               text: 'Ok', role: 'ok', handler: () => {
-                this.doGet(true);
-                return;
+                this.doGet();
+                this.showAds();
               }
             }],
             subTitle: 'Entre em contato com seu novo Duo!'
           }).present();
         } else {
-          this.doGet(false);
+          this.doGet();
         }
       }, err => {
         console.log(err);
@@ -137,16 +148,20 @@ export class HomePage {
               this.elo = null;
               this.wr = null;
               this.id = null;
-              this.doGet(false);
+              this.doGet();
             }
           }],
           subTitle: 'Não foi possível fazer o cadastro com os dados enviados.'
         }).present();
       })
-    if (this.adsCounter == 5){
+    this.summoners.splice(0, 1);
+    if (this.summoners.length <= 0) {
+      this.doGet();
+    }
+    if (this.adsCounter == 5) {
       this.adsCounter = 0;
       this.showAds();
-    }else{
+    } else {
       this.adsCounter++
     }
   }

@@ -6,9 +6,9 @@
 
 <ion-content no-bounce>
     <ion-list id="item-list">
-        <button ion-item *ngFor="let duo of duos" (click)="perfil(duo.name)">
+        <button ion-item *ngFor="let duo of duos" (click)="perfil(duo)">
             <ion-avatar item-start>
-                    <img [src]="'assets/tier-icons/base-icons/' + duo.rank + '.png'">
+                    <img [src]="'../assets/tier-icons/base-icons/'+duo.elo[0].tier+'.png'">
             </ion-avatar>
             <h2>{{duo.name}}</h2>
         </button>

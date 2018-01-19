@@ -52,6 +52,15 @@ export class RegisterPage {
             content: "Criando usuário, aguarde...",
         });
         loader.present();
+
+        if(!this.password){
+            this.alertCtrl.create({
+                title: 'A senha não pode ser vazia',
+                buttons: [{ text: 'Ok' }]
+            }).present();
+            loader.dismiss();
+            return;
+        }
         let header: Headers = new Headers();
         header.append('Content-Type', 'application/json');
         header.append('Authorization', 'Basic ZGlpYW5rOmFkbWlu');

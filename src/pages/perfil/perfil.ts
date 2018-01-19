@@ -22,17 +22,17 @@ export class PerfilPage {
         public paramCtrl: NavParams,
         public adMobFree: AdMobFree) {
         this.user = JSON.parse(paramCtrl.get('user'));
+        const bannerConfig: AdMobFreeBannerConfig = {
+            id: 'ca-app-pub-9244281701655647/6523547220',
+            //isTesting: true,
+            autoShow: true,bannerAtTop: true
+        }
+
+        this.adMobFree.banner.config(bannerConfig);
     }
 
     showAds() {
         try {
-            const bannerConfig: AdMobFreeBannerConfig = {
-                id: 'ca-app-pub-9244281701655647/6523547220',
-                //isTesting: true,
-                autoShow: true,bannerAtTop: true
-            }
-
-            this.adMobFree.banner.config(bannerConfig);
             this.adMobFree.banner.prepare().then(() => {
                 this.adMobFree.banner.show();
             })
@@ -55,13 +55,21 @@ export class PerfilPage {
         let loader = this.loadingCtrl.create({
             content: "Atualizando usuário, aguarde...",
         });
-        let senha = this.user.password;
         loader.present();
+        if(!this.user.password){
+            this.alertCtrl.create({
+                title: 'A senha não pode ser vazia',
+                buttons: [{ text: 'Ok' }]
+            }).present();
+            loader.dismiss();
+            return;
+        }
+        let senha = this.user.password;
         let header: Headers = new Headers();
         header.append('Content-Type', 'application/json');
         header.append('Authorization', 'Basic ' + this.user.token);
         let options = new RequestOptions({ headers: header });
-        this.user = { id: this.user.id, name: this.user.name, email: this.user.email, pwd: this.user.password };
+        this.user = { id: this.user.id, name: this.user.name, email: this.user.email, pwd: this.user.password , discord: this.user.discord };
         this.http.put(this.URL + '/api/users', this.user, options)
             .map(res => res.text())
             .toPromise().then(data => {
